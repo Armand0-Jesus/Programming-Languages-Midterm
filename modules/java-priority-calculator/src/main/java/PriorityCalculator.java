@@ -1,9 +1,9 @@
 package main.java;
 
 public class PriorityCalculator {
-    public static double calculateScore(int urgency, int difficulty, int hoursLeft) {
-        int safeHours = Math.max(hoursLeft, 1);
-        return (urgency * 0.5) + (difficulty * 0.3) + ((10.0 / safeHours) * 0.2);
+    public static double calculateScore(int urgency, int difficulty, int daysLeft) {
+        int safeDays = Math.max(daysLeft, 1);
+        return (urgency * 0.5) + (difficulty * 0.3) + ((10.0 / safeDays) * 0.2);
     }
 
     public static String toPriorityLabel(double score) {
@@ -16,8 +16,8 @@ public class PriorityCalculator {
         return "BAJA";
     }
 
-    public static String calculate(String taskName, int urgency, int difficulty, int hoursLeft) {
-        double score = calculateScore(urgency, difficulty, hoursLeft);
+    public static String calculate(String taskName, int urgency, int difficulty, int daysLeft) {
+        double score = calculateScore(urgency, difficulty, daysLeft);
         return toPriorityLabel(score);
     }
 }

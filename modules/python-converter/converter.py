@@ -14,28 +14,20 @@ except ImportError:
         return decorator
 
 
-def percentage_to_letter(score):
-    if score >= 90:
-        return "A"
-    if score >= 80:
-        return "B"
-    if score >= 70:
-        return "C"
-    if score >= 60:
-        return "D"
-    return "F"
+def fahrenheit_to_celsius(fahrenheit):
+    return (fahrenheit - 32) * 5 / 9
 
 
-def hours_to_minutes(hours):
-    return hours * 60
+def pounds_to_kilograms(pounds):
+    return pounds * 0.45359237
 
 
-def celsius_to_fahrenheit(celsius):
-    return (celsius * 9 / 5) + 32
+def feet_to_meters(feet):
+    return feet * 0.3048
 
 
-def megabytes_to_gigabytes(megabytes):
-    return megabytes / 1024
+def gallons_to_liters(gallons):
+    return gallons * 3.785411784
 
 
 def get_document():
@@ -56,22 +48,21 @@ def parse_input_value():
 
 
 def convert_selected_value(converter_type, value):
-    if converter_type == "percentage_to_letter":
-        if not 0 <= value <= 100:
-            raise ValueError("Para porcentaje a letra, usa un valor entre 0 y 100.")
-        return f"{value:.2f}% equivale a letra {percentage_to_letter(value)}."
+    if converter_type == "fahrenheit_to_celsius":
+        result = fahrenheit_to_celsius(value)
+        return f"{value:.2f} F son {result:.2f} C."
 
-    if converter_type == "hours_to_minutes":
-        result = hours_to_minutes(value)
-        return f"{value:.2f} horas son {result:.2f} minutos."
+    if converter_type == "pounds_to_kilograms":
+        result = pounds_to_kilograms(value)
+        return f"{value:.2f} libras son {result:.2f} kg."
 
-    if converter_type == "celsius_to_fahrenheit":
-        result = celsius_to_fahrenheit(value)
-        return f"{value:.2f} C son {result:.2f} F."
+    if converter_type == "feet_to_meters":
+        result = feet_to_meters(value)
+        return f"{value:.2f} pies son {result:.2f} metros."
 
-    if converter_type == "megabytes_to_gigabytes":
-        result = megabytes_to_gigabytes(value)
-        return f"{value:.2f} MB son {result:.4f} GB."
+    if converter_type == "gallons_to_liters":
+        result = gallons_to_liters(value)
+        return f"{value:.2f} galones son {result:.2f} litros."
 
     raise ValueError("Tipo de conversion no soportado.")
 

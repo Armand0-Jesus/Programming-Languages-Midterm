@@ -9,9 +9,6 @@
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
   </head>
   <body>
-    <div class="decor decor-a" aria-hidden="true"></div>
-    <div class="decor decor-b" aria-hidden="true"></div>
-
     <div class="app-shell">
       <header class="site-header">
         <p class="eyebrow">Programming Languages Midterm Project</p>
@@ -37,48 +34,84 @@
           <p class="meta">Paradigma: Imperativo | Estado: Funcional minimo</p>
           <div class="placeholder-box">
             <p class="module-help">
-              Ingresa hasta 4 notas con sus pesos. Puedes dejar filas vacias si no las necesitas.
+              Ingresa hasta 8 clases con nota y creditos. La nota puede ser A, B, C, D, F o porcentaje.
             </p>
 
             <div class="form-grid form-grid-two">
-              <label class="field" for="gpa-grade-1">
-                <span>Nota 1 (0-100)</span>
-                <input id="gpa-grade-1" type="number" min="0" max="100" step="0.01" />
+              <label id="gpa-grade-field-1" class="field" for="gpa-grade-1">
+                <span>Nota 1 (A-F o 0-100)</span>
+                <input id="gpa-grade-1" type="text" maxlength="6" />
               </label>
-              <label class="field" for="gpa-weight-1">
-                <span>Peso 1 (%)</span>
-                <input id="gpa-weight-1" type="number" min="0" step="0.01" />
-              </label>
-
-              <label class="field" for="gpa-grade-2">
-                <span>Nota 2 (0-100)</span>
-                <input id="gpa-grade-2" type="number" min="0" max="100" step="0.01" />
-              </label>
-              <label class="field" for="gpa-weight-2">
-                <span>Peso 2 (%)</span>
-                <input id="gpa-weight-2" type="number" min="0" step="0.01" />
+              <label id="gpa-credits-field-1" class="field" for="gpa-credits-1">
+                <span>Creditos 1</span>
+                <input id="gpa-credits-1" type="number" min="1" step="1" />
               </label>
 
-              <label class="field" for="gpa-grade-3">
-                <span>Nota 3 (0-100)</span>
-                <input id="gpa-grade-3" type="number" min="0" max="100" step="0.01" />
+              <label id="gpa-grade-field-2" class="field" for="gpa-grade-2">
+                <span>Nota 2 (A-F o 0-100)</span>
+                <input id="gpa-grade-2" type="text" maxlength="6" />
               </label>
-              <label class="field" for="gpa-weight-3">
-                <span>Peso 3 (%)</span>
-                <input id="gpa-weight-3" type="number" min="0" step="0.01" />
+              <label id="gpa-credits-field-2" class="field" for="gpa-credits-2">
+                <span>Creditos 2</span>
+                <input id="gpa-credits-2" type="number" min="1" step="1" />
               </label>
 
-              <label class="field" for="gpa-grade-4">
-                <span>Nota 4 (0-100)</span>
-                <input id="gpa-grade-4" type="number" min="0" max="100" step="0.01" />
+              <label id="gpa-grade-field-3" class="field" for="gpa-grade-3">
+                <span>Nota 3 (A-F o 0-100)</span>
+                <input id="gpa-grade-3" type="text" maxlength="6" />
               </label>
-              <label class="field" for="gpa-weight-4">
-                <span>Peso 4 (%)</span>
-                <input id="gpa-weight-4" type="number" min="0" step="0.01" />
+              <label id="gpa-credits-field-3" class="field" for="gpa-credits-3">
+                <span>Creditos 3</span>
+                <input id="gpa-credits-3" type="number" min="1" step="1" />
+              </label>
+
+              <label id="gpa-grade-field-4" class="field" for="gpa-grade-4">
+                <span>Nota 4 (A-F o 0-100)</span>
+                <input id="gpa-grade-4" type="text" maxlength="6" />
+              </label>
+              <label id="gpa-credits-field-4" class="field" for="gpa-credits-4">
+                <span>Creditos 4</span>
+                <input id="gpa-credits-4" type="number" min="1" step="1" />
+              </label>
+
+              <label id="gpa-grade-field-5" class="field" for="gpa-grade-5">
+                <span>Nota 5 (A-F o 0-100)</span>
+                <input id="gpa-grade-5" type="text" maxlength="6" />
+              </label>
+              <label id="gpa-credits-field-5" class="field" for="gpa-credits-5">
+                <span>Creditos 5</span>
+                <input id="gpa-credits-5" type="number" min="1" step="1" />
+              </label>
+
+              <label id="gpa-grade-field-6" class="field" for="gpa-grade-6">
+                <span>Nota 6 (A-F o 0-100)</span>
+                <input id="gpa-grade-6" type="text" maxlength="6" />
+              </label>
+              <label id="gpa-credits-field-6" class="field" for="gpa-credits-6">
+                <span>Creditos 6</span>
+                <input id="gpa-credits-6" type="number" min="1" step="1" />
+              </label>
+
+              <label id="gpa-grade-field-7" class="field" for="gpa-grade-7">
+                <span>Nota 7 (A-F o 0-100)</span>
+                <input id="gpa-grade-7" type="text" maxlength="6" />
+              </label>
+              <label id="gpa-credits-field-7" class="field" for="gpa-credits-7">
+                <span>Creditos 7</span>
+                <input id="gpa-credits-7" type="number" min="1" step="1" />
+              </label>
+
+              <label id="gpa-grade-field-8" class="field" for="gpa-grade-8">
+                <span>Nota 8 (A-F o 0-100)</span>
+                <input id="gpa-grade-8" type="text" maxlength="6" />
+              </label>
+              <label id="gpa-credits-field-8" class="field" for="gpa-credits-8">
+                <span>Creditos 8</span>
+                <input id="gpa-credits-8" type="number" min="1" step="1" />
               </label>
             </div>
 
-            <button id="gpa-calc-btn" class="action-btn" type="button">Calcular promedio</button>
+            <button id="gpa-calc-btn" class="action-btn" type="button">Calcular GPA</button>
             <p id="gpa-result" class="result-box" aria-live="polite">Resultado: listo para calcular.</p>
           </div>
         </section>
@@ -93,10 +126,10 @@
               <label class="field" for="converter-type">
                 <span>Tipo de conversion</span>
                 <select id="converter-type">
-                  <option value="percentage_to_letter">Porcentaje a letra</option>
-                  <option value="hours_to_minutes">Horas a minutos</option>
-                  <option value="celsius_to_fahrenheit">Celsius a Fahrenheit</option>
-                  <option value="megabytes_to_gigabytes">MB a GB</option>
+                  <option value="fahrenheit_to_celsius">Fahrenheit a Celsius</option>
+                  <option value="pounds_to_kilograms">Libras a kg</option>
+                  <option value="feet_to_meters">Pies a metros</option>
+                  <option value="gallons_to_liters">Galones a litros</option>
                 </select>
               </label>
 
@@ -115,12 +148,12 @@
           <h2 id="java-task-title">Java - Task Manager simple</h2>
           <p class="meta">Paradigma: Orientado a Objetos | Estado: Funcional minimo</p>
           <div class="placeholder-box">
-            <p class="module-help">Agrega tareas, marcarlas completadas y eliminarlas. Se guardan localmente.</p>
+            <p class="module-help">Agrega tareas y eliminalas cuando ya no las necesites. Se guardan localmente.</p>
 
             <div class="form-grid">
               <label class="field" for="java-task-input">
                 <span>Nueva tarea</span>
-                <input id="java-task-input" type="text" maxlength="120" placeholder="Ej. Estudiar calculo 1 hora" />
+                <input id="java-task-input" type="text" maxlength="120" placeholder="Ej. Estudiar calculo" />
               </label>
             </div>
 
@@ -136,7 +169,7 @@
           <p class="meta">Paradigma: Orientado a Objetos | Estado: Funcional minimo</p>
           <div class="placeholder-box">
             <p class="module-help">
-              Ingresa urgencia, dificultad y horas restantes para obtener prioridad sugerida.
+              Ingresa urgencia, dificultad y dias restantes para obtener prioridad sugerida.
             </p>
 
             <div class="form-grid form-grid-two">
@@ -145,9 +178,9 @@
                 <input id="java-priority-name" type="text" maxlength="120" placeholder="Ej. Proyecto de programacion" />
               </label>
 
-              <label class="field" for="java-priority-hours">
-                <span>Horas restantes</span>
-                <input id="java-priority-hours" type="number" min="1" step="1" />
+              <label class="field" for="java-priority-days">
+                <span>Dias restantes</span>
+                <input id="java-priority-days" type="number" min="1" max="365" step="1" />
               </label>
 
               <label class="field" for="java-priority-urgency">

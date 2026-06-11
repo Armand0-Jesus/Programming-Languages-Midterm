@@ -11,8 +11,8 @@ public final class PriorityBridgeEntry {
     }
 
     @JSBody(script = "window.JavaPriorityBridge = {"
-            + " calculateScore: function(urgency, difficulty, hoursLeft) {"
-            + "   return javaMethods.get('main.java.PriorityBridgeEntry.calculateScore(III)D').invoke(urgency, difficulty, hoursLeft);"
+            + " calculateScore: function(urgency, difficulty, daysLeft) {"
+            + "   return javaMethods.get('main.java.PriorityBridgeEntry.calculateScore(III)D').invoke(urgency, difficulty, daysLeft);"
             + " },"
             + " getPriorityLabel: function(score) {"
             + "   return javaMethods.get('main.java.PriorityBridgeEntry.getPriorityLabel(D)Ljava/lang/String;').invoke(score);"
@@ -20,8 +20,8 @@ public final class PriorityBridgeEntry {
             + "};")
     private static native void exposeBridge();
 
-    public static double calculateScore(int urgency, int difficulty, int hoursLeft) {
-        return PriorityCalculator.calculateScore(urgency, difficulty, hoursLeft);
+    public static double calculateScore(int urgency, int difficulty, int daysLeft) {
+        return PriorityCalculator.calculateScore(urgency, difficulty, daysLeft);
     }
 
     public static String getPriorityLabel(double score) {

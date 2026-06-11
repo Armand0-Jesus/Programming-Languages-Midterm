@@ -13,21 +13,10 @@ class JavaTaskManager {
     const task = {
       id: createTaskId(),
       title,
-      completed: false,
     };
 
     this.tasks.push(task);
     return task;
-  }
-
-  toggleTask(taskId) {
-    const task = this.tasks.find((item) => item.id === taskId);
-    if (!task) {
-      return false;
-    }
-
-    task.completed = !task.completed;
-    return true;
   }
 
   deleteTask(taskId) {
@@ -38,9 +27,9 @@ class JavaTaskManager {
 }
 
 class JavaPriorityCalculator {
-  static calculateScore(urgency, difficulty, hoursLeft) {
-    const safeHours = Math.max(hoursLeft, 1);
-    return urgency * 0.5 + difficulty * 0.3 + (10 / safeHours) * 0.2;
+  static calculateScore(urgency, difficulty, daysLeft) {
+    const safeDays = Math.max(daysLeft, 1);
+    return urgency * 0.5 + difficulty * 0.3 + (10 / safeDays) * 0.2;
   }
 
   static getPriorityLabel(score) {
@@ -155,7 +144,6 @@ function loadStoredTasks() {
       .map((item) => ({
         id: item.id,
         title: item.title,
-        completed: Boolean(item.completed),
       }));
   } catch {
     return [];
@@ -184,20 +172,11 @@ function renderTaskList(manager, listElement) {
     const main = document.createElement("div");
     main.className = "task-main";
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = task.completed;
-    checkbox.dataset.taskId = task.id;
-    checkbox.dataset.action = "toggle";
-
     const title = document.createElement("span");
     title.className = "task-title";
     title.textContent = task.title;
-    if (task.completed) {
-      title.classList.add("is-done");
-    }
 
-    main.append(checkbox, title);
+    main.append(title);
 
     const actions = document.createElement("div");
     actions.className = "task-actions";
@@ -272,25 +251,6 @@ function initJavaTaskModule() {
     }
   });
 
-  list.addEventListener("change", (event) => {
-    const target = event.target;
-    if (!(target instanceof HTMLElement)) {
-      return;
-    }
-
-    const action = target.dataset.action;
-    const taskId = target.dataset.taskId;
-
-    if (action !== "toggle" || !taskId) {
-      return;
-    }
-
-    if (manager.toggleTask(taskId)) {
-      saveStoredTasks(manager.tasks);
-      renderTaskList(manager, list);
-      showMessage(feedback, "Estado de tarea actualizado.");
-    }
-  });
 }
 
 function parseIntegerInRange(value, fieldName, min, max) {
@@ -306,16 +266,16 @@ function parseIntegerInRange(value, fieldName, min, max) {
   return parsed;
 }
 
-function calculatePriorityScore(urgency, difficulty, hoursLeft) {
+function calculatePriorityScore(urgency, difficulty, daysLeft) {
   const bridge = getPriorityBridge();
   if (bridge && typeof bridge.calculateScore === "function") {
-    const bridgeScore = Number(bridge.calculateScore(urgency, difficulty, hoursLeft));
+    const bridgeScore = Number(bridge.calculateScore(urgency, difficulty, daysLeft));
     if (Number.isFinite(bridgeScore)) {
       return bridgeScore;
     }
   }
 
-  return JavaPriorityCalculator.calculateScore(urgency, difficulty, hoursLeft);
+  return JavaPriorityCalculator.calculateScore(urgency, difficulty, daysLeft);
 }
 
 function resolvePriorityLabel(score) {
@@ -332,24 +292,24 @@ function resolvePriorityLabel(score) {
 
 function initJavaPriorityModule() {
   const nameInput = getElement("java-priority-name");
-  const hoursInput = getElement("java-priority-hours");
+  const daysInput = getElement("java-priority-days");
   const urgencyInput = getElement("java-priority-urgency");
   const difficultyInput = getElement("java-priority-difficulty");
   const runButton = getElement("java-priority-run-btn");
   const result = getElement("java-priority-result");
 
-  if (!nameInput || !hoursInput || !urgencyInput || !difficultyInput || !runButton || !result) {
+  if (!nameInput || !daysInput || !urgencyInput || !difficultyInput || !runButton || !result) {
     return;
   }
 
   runButton.addEventListener("click", () => {
     try {
       const taskName = nameInput.value.trim() || "(sin nombre)";
-      const hoursLeft = parseIntegerInRange(hoursInput.value, "Horas restantes", 1, 500);
+      const daysLeft = parseIntegerInRange(daysInput.value, "Dias restantes", 1, 365);
       const urgency = parseIntegerInRange(urgencyInput.value, "Urgencia", 1, 10);
       const difficulty = parseIntegerInRange(difficultyInput.value, "Dificultad", 1, 10);
 
-      const score = calculatePriorityScore(urgency, difficulty, hoursLeft);
+      const score = calculatePriorityScore(urgency, difficulty, daysLeft);
       const priority = resolvePriorityLabel(score);
 
       showMessage(result, `${taskName}: prioridad ${priority} (score ${score.toFixed(2)})`);
