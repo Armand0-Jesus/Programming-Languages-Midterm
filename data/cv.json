@@ -16,7 +16,7 @@
       },
       {
         "enabled": true,
-        "text": "Interested in web development, software design, and programming language paradigms."
+        "text": "Interested in web development, software design and programming language paradigms."
       }
     ]
   },
@@ -27,13 +27,13 @@
         "enabled": true,
         "institution": "University of Puerto Rico",
         "degree": "BS in Computer Science",
-        "years": "2022-2026"
+        "years": "2023-2027"
       },
       {
         "enabled": true,
         "institution": "Colegio Example",
         "degree": "High School Diploma",
-        "years": "2018-2022"
+        "years": "2019-2023"
       }
     ]
   },
