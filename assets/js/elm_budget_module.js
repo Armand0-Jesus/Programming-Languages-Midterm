@@ -23,7 +23,7 @@ function initElmBudgetModule() {
   const elmGlobal = window.Elm;
   if (!elmGlobal || !elmGlobal.Main || typeof elmGlobal.Main.init !== "function") {
     showElmStatus(
-      "Error: elm-budget.js was not found. Build the tracker to activate this tool.",
+      "Error: elm_budget.js was not found. Build the tracker to activate this tool.",
       true
     );
     return;

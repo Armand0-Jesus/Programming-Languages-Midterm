@@ -1,4 +1,4 @@
-const RULES_PATH = "modules/prolog-recommender/rules.pl";
+const RULES_PATH = "modules/academic_recommender/rules.pl";
 
 const RECOMMENDATION_MESSAGES = {
   study_for_exam: "Prioritize exam study today.",

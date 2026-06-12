@@ -6,8 +6,8 @@ param(
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$taskModulePath = Join-Path $repoRoot "modules\java-task-manager"
-$priorityModulePath = Join-Path $repoRoot "modules\java-priority-calculator"
+$taskModulePath = Join-Path $repoRoot "modules\task_manager"
+$priorityModulePath = Join-Path $repoRoot "modules\priority_calculator"
 
 function Invoke-MavenPackage {
     param([string]$ModulePath)
