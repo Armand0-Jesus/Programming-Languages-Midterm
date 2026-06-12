@@ -1,0 +1,188 @@
+{
+  "profile": {
+    "enabled": true,
+    "fullName": "Armando J. Rodr\u00edguez",
+    "items": [
+      {
+        "enabled": true,
+        "label": "Email",
+        "value": "armandorodz23@gmail.com",
+        "href": "mailto:armandorodz23@gmail.com"
+      },
+      {
+        "enabled": true,
+        "label": "LinkedIn",
+        "value": "linkedin.com/in/armando-rodriguez26",
+        "href": "https://www.linkedin.com/in/armando-rodriguez26/"
+      },
+      {
+        "enabled": true,
+        "label": "GitHub",
+        "value": "github.com/Armand0-Jesus",
+        "href": "https://github.com/Armand0-Jesus"
+      }
+    ]
+  },
+  "summary": {
+    "enabled": true,
+    "items": [
+      {
+        "enabled": true,
+        "text": "Undergraduate Computer Science student interested in full-stack/backend development, distributed systems and machine learning. Eager to continuously learn as much as possible and leverage my skills to make a meaningful impact in the tech world."
+      }
+    ]
+  },
+  "education": {
+    "enabled": true,
+    "items": [
+      {
+        "enabled": true,
+        "institution": "University of Puerto Rico - Mayag\u00fcez Campus",
+        "degree": "Bachelor of Science in Computer Science",
+        "location": "Mayag\u00fcez, PR",
+        "years": "Aug. 2023 - Dec. 2027",
+        "highlights": [
+          "Relevant Coursework: Data Structures, Object-Oriented Programming, Operating Systems, Programming Languages, Computer Organization, Discrete Math, Statistical Data Analysis.",
+          "Affiliations: Association for Computing Machinery (ACM), UPRM Student Chapter."
+        ]
+      }
+    ]
+  },
+  "experience": {
+    "enabled": true,
+    "items": [
+      {
+        "enabled": true,
+        "role": "Information Technology Specialist",
+        "organization": "University of Puerto Rico - Mayag\u00fcez",
+        "location": "Mayag\u00fcez, PR",
+        "years": "Feb. 2026 - Present",
+        "highlights": [
+          "Co-developed the implementation of CiviCRM on university servers to enhance outreach for more than 5,000 admission and readmission candidates.",
+          "Reduced CiviCRM deployment troubleshooting time by identifying more than four application issues related to REST APIs and application configurations.",
+          "Configured and managed multiple virtualization environments with VirtualBox to support testing across Linux, macOS and Windows."
+        ]
+      }
+    ]
+  },
+  "researchExperience": {
+    "enabled": true,
+    "items": [
+      {
+        "enabled": true,
+        "name": "ComparaPR AI Agent",
+        "tech": "Python, Streamlit, Git",
+        "location": "Mayag\u00fcez, PR",
+        "years": "Aug. 2025 - Dec. 2025",
+        "highlights": [
+          "Investigated how customers could reduce cost and time through an application that analyzes supermarket prices and locations to recommend the most efficient option.",
+          "Analyzed and selected NLP and optimization algorithms for product normalization, product matching and unit-price calculations used by the recommendation agent.",
+          "Developed a Python and Streamlit web application that identifies the most cost-effective supermarket option for the customer."
+        ]
+      }
+    ]
+  },
+  "projects": {
+    "enabled": true,
+    "items": [
+      {
+        "enabled": true,
+        "name": "Customer Management Microservices",
+        "tech": "Spring Boot, Python, PostgreSQL, Redis, Docker",
+        "highlights": [
+          "Built a containerized multi-service customer management system using a microservices architecture and agile-inspired workflows with GET, POST, PUT and DELETE operations.",
+          "Integrated JWT authentication and service communication through REST and gRPC APIs.",
+          "Improved backend reliability with rate limiting and caching while maintaining an average response time below 25 ms under progressively higher workloads.",
+          "Validated service performance through Locust load testing and JUnit integration testing."
+        ]
+      },
+      {
+        "enabled": true,
+        "name": "Smart Academic Task Planner",
+        "tech": "C++, Java, GitHub Actions, Git",
+        "highlights": [
+          "Led the implementation of an academic task planner using linked lists, stacks, queues, hash tables and graph-based dependency tracking.",
+          "Created a Java data generator that produces structured task datasets for validating scheduling scenarios, task dependencies and file input handling.",
+          "Added GitHub Actions CI for automatic C++ compilation and unit testing of data structures, scheduling logic and file operations."
+        ]
+      }
+    ]
+  },
+  "skills": {
+    "enabled": true,
+    "items": [
+      {
+        "enabled": true,
+        "name": "Programming Languages",
+        "values": ["Java", "Python", "C/C++", "SQL", "JavaScript", "HTML/CSS"]
+      },
+      {
+        "enabled": true,
+        "name": "Frameworks",
+        "values": ["Spring Boot", "Flask", "React", "Streamlit", "JUnit", "Locust", "gRPC"]
+      },
+      {
+        "enabled": true,
+        "name": "Tools",
+        "values": ["Git", "Docker", "GitHub Actions", "Linux", "Maven", "Kafka", "MS Office", "AWS"]
+      },
+      {
+        "enabled": true,
+        "name": "Libraries",
+        "values": ["Pandas", "NumPy", "REST Assured", "JJWT"]
+      },
+      {
+        "enabled": true,
+        "name": "Databases",
+        "values": ["MySQL", "SQLite", "PostgreSQL", "Redis"]
+      }
+    ]
+  },
+  "certifications": {
+    "enabled": true,
+    "items": [
+      {
+        "enabled": true,
+        "name": "CS50x: Introduction to Computer Science",
+        "issuer": "Harvard University"
+      },
+      {
+        "enabled": true,
+        "name": "AWS Certified Cloud Practitioner",
+        "issuer": "Amazon Web Services"
+      }
+    ]
+  },
+  "languages": {
+    "enabled": true,
+    "items": [
+      {
+        "enabled": true,
+        "name": "English",
+        "level": "Advanced"
+      },
+      {
+        "enabled": true,
+        "name": "Spanish",
+        "level": "Advanced"
+      }
+    ]
+  },
+  "hobbies": {
+    "enabled": true,
+    "items": [
+      {
+        "enabled": true,
+        "name": "Basketball"
+      },
+      {
+        "enabled": true,
+        "name": "Programming"
+      },
+      {
+        "enabled": true,
+        "name": "Video Games"
+      }
+    ]
+  }
+}

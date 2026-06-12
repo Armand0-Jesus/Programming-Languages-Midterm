@@ -1,16 +1,76 @@
-const CV_DATA_PATH = "data/cv.json";
+const CV_DATA_PATH = "modules/cv_generator/cv.json";
 
 const SECTION_LABELS = {
+  profile: "Contact Information",
   summary: "Summary",
   education: "Education",
   experience: "Experience",
+  researchExperience: "Research Experience",
   projects: "Projects",
-  skills: "Skills",
+  skills: "Technical Skills",
   certifications: "Certifications",
-  languages: "Communication",
-  volunteer: "Volunteer Work",
-  awards: "Awards",
-  references: "References",
+  languages: "Languages",
+  hobbies: "Hobbies and Interests",
+};
+
+const RESUME_SECTION_ORDER = [
+  "summary",
+  "education",
+  "experience",
+  "researchExperience",
+  "projects",
+  "skills",
+  "certifications",
+  "languages",
+  "hobbies",
+];
+
+const ITEM_LABEL_GETTERS = {
+  profile: (item) => [item.label, item.value].filter(Boolean).join(": "),
+  summary: (item) => item.text,
+  education: (item) => [item.degree, item.institution].filter(Boolean).join(" - "),
+  experience: (item) => [item.role, item.organization].filter(Boolean).join(" - "),
+  researchExperience: (item) => item.name,
+  projects: (item) => item.name,
+  skills: (item) => item.name,
+  certifications: (item) => item.name,
+  languages: (item) => item.name,
+  hobbies: (item) => item.name,
+};
+
+const ENTRY_PRESENTERS = {
+  education: (item) => ({
+    title: item.institution,
+    date: item.years,
+    subtitle: item.degree,
+    meta: item.location,
+    highlights: item.highlights,
+  }),
+  experience: (item) => ({
+    title: item.role,
+    date: item.years,
+    subtitle: item.organization,
+    meta: item.location,
+    highlights: item.highlights,
+  }),
+  researchExperience: (item) => ({
+    title: item.name,
+    date: item.years,
+    subtitle: item.tech,
+    meta: item.location,
+    highlights: item.highlights,
+  }),
+  projects: (item) => ({
+    title: item.name,
+    date: item.year,
+    subtitle: item.tech,
+    highlights: item.highlights,
+  }),
+  certifications: (item) => ({
+    title: item.name,
+    date: item.year,
+    subtitle: item.issuer,
+  }),
 };
 
 let cvData = null;
@@ -18,6 +78,20 @@ let isCvBusy = false;
 
 function getElement(id) {
   return document.querySelector(`#${id}`);
+}
+
+function createElement(tagName, className, text) {
+  const element = document.createElement(tagName);
+
+  if (className) {
+    element.className = className;
+  }
+
+  if (typeof text === "string") {
+    element.textContent = text;
+  }
+
+  return element;
 }
 
 function showCvFeedback(message, isError = false) {
@@ -31,13 +105,7 @@ function showCvFeedback(message, isError = false) {
 }
 
 function setCvActionButtonsDisabled(disabled) {
-  const reloadButton = getElement("cv-reload-btn");
   const downloadButton = getElement("cv-download-btn");
-
-  if (reloadButton) {
-    reloadButton.disabled = disabled;
-  }
-
   if (downloadButton) {
     downloadButton.disabled = disabled;
   }
@@ -51,7 +119,7 @@ function setCvBusyState(isBusy) {
 async function loadCvData() {
   const response = await fetch(CV_DATA_PATH);
   if (!response.ok) {
-    throw new Error("Could not load data/cv.json.");
+    throw new Error("Could not load cv.json.");
   }
 
   return response.json();
@@ -70,11 +138,7 @@ function isCategoryEnabled(category) {
 }
 
 function getItems(category) {
-  if (!Array.isArray(category?.items)) {
-    return [];
-  }
-
-  return category.items;
+  return Array.isArray(category?.items) ? category.items : [];
 }
 
 function getEnabledItems(category) {
@@ -82,70 +146,18 @@ function getEnabledItems(category) {
 }
 
 function getItemLabel(sectionKey, item, index) {
-  if (!item || typeof item !== "object") {
-    return `Entry ${index + 1}`;
-  }
-
-  if (sectionKey === "summary") {
-    return item.text || `Summary ${index + 1}`;
-  }
-
-  if (sectionKey === "education") {
-    const degree = item.degree || "Study";
-    const institution = item.institution || "Institution";
-    return `${degree} - ${institution}`;
-  }
-
-  if (sectionKey === "experience") {
-    const role = item.role || "Role";
-    const organization = item.organization || "Organization";
-    return `${role} - ${organization}`;
-  }
-
-  if (sectionKey === "projects") {
-    return item.name || `Project ${index + 1}`;
-  }
-
-  if (sectionKey === "skills") {
-    return item.name || `Skill ${index + 1}`;
-  }
-
-  if (sectionKey === "certifications") {
-    return item.name || `Certification ${index + 1}`;
-  }
-
-  if (sectionKey === "languages") {
-    return item.name || `Communication item ${index + 1}`;
-  }
-
-  if (sectionKey === "volunteer") {
-    const role = item.role || "Role";
-    const organization = item.organization || "Organization";
-    return `${role} - ${organization}`;
-  }
-
-  if (sectionKey === "awards") {
-    return item.title || `Award ${index + 1}`;
-  }
-
-  if (sectionKey === "references") {
-    return item.name || `Reference ${index + 1}`;
-  }
-
-  return `Entry ${index + 1}`;
+  const label = ITEM_LABEL_GETTERS[sectionKey]?.(item);
+  return label || `Entry ${index + 1}`;
 }
 
 function createToggleRow(labelText, checked, onChange) {
-  const label = document.createElement("label");
-  label.className = "cv-toggle";
+  const label = createElement("label", "cv-toggle");
+  const input = createElement("input");
+  const text = createElement("span", "", labelText);
 
-  const input = document.createElement("input");
   input.type = "checkbox";
   input.checked = checked;
   input.addEventListener("change", () => onChange(input.checked));
-
-  const text = document.createElement("span");
-  text.textContent = labelText;
 
   label.append(input, text);
   return label;
@@ -159,41 +171,53 @@ function renderCvControls() {
 
   container.innerHTML = "";
 
-  Object.keys(cvData).forEach((sectionKey) => {
-    const sectionData = cvData[sectionKey];
+  Object.entries(cvData).forEach(([sectionKey, sectionData]) => {
     if (!sectionData || typeof sectionData !== "object") {
       return;
     }
 
-    const card = document.createElement("article");
-    card.className = "cv-control-card";
-
-    const title = document.createElement("h4");
-    title.textContent = toSectionLabel(sectionKey);
-    card.appendChild(title);
-
-    const sectionToggle = createToggleRow("Show section", isCategoryEnabled(sectionData), (checked) => {
-      sectionData.enabled = checked;
-      renderCvResume();
-    });
-    card.appendChild(sectionToggle);
+    const card = createElement("article", "cv-control-card");
+    card.appendChild(createElement("h4", "", toSectionLabel(sectionKey)));
 
     const items = getItems(sectionData);
+    if (sectionKey === "summary" && items.length === 1) {
+      const summaryItem = items[0];
+      card.appendChild(
+        createToggleRow(
+          "Show summary",
+          isCategoryEnabled(sectionData) && summaryItem.enabled !== false,
+          (checked) => {
+            sectionData.enabled = checked;
+            summaryItem.enabled = checked;
+            renderCvResume();
+          },
+        ),
+      );
+      container.appendChild(card);
+      return;
+    }
+
+    card.appendChild(
+      createToggleRow("Show section", isCategoryEnabled(sectionData), (checked) => {
+        sectionData.enabled = checked;
+        renderCvResume();
+      }),
+    );
+
     if (items.length > 0) {
-      const itemList = document.createElement("div");
-      itemList.className = "cv-toggle-list";
+      const itemList = createElement("div", "cv-toggle-list");
 
       items.forEach((item, index) => {
         if (typeof item.enabled !== "boolean") {
           item.enabled = true;
         }
 
-        const itemToggle = createToggleRow(getItemLabel(sectionKey, item, index), item.enabled, (checked) => {
-          item.enabled = checked;
-          renderCvResume();
-        });
-
-        itemList.appendChild(itemToggle);
+        itemList.appendChild(
+          createToggleRow(getItemLabel(sectionKey, item, index), item.enabled, (checked) => {
+            item.enabled = checked;
+            renderCvResume();
+          }),
+        );
       });
 
       card.appendChild(itemList);
@@ -208,69 +232,153 @@ function appendProfileHeader(container, profile) {
     return;
   }
 
-  const header = document.createElement("header");
-  header.className = "resume-header";
+  const header = createElement("header", "resume-header");
+  header.appendChild(createElement("h2", "", profile.fullName || "No name"));
 
-  const name = document.createElement("h2");
-  name.textContent = profile.fullName || "No name";
+  const contactItems = getEnabledItems(profile).filter((item) => item.value);
+  if (contactItems.length > 0) {
+    const contact = createElement("div", "resume-contact");
 
-  const headline = document.createElement("p");
-  headline.className = "resume-headline";
-  headline.textContent = profile.headline || "";
+    contactItems.forEach((item, index) => {
+      if (index > 0) {
+        contact.appendChild(createElement("span", "resume-contact-separator", "|"));
+      }
 
-  const contactParts = [profile.email, profile.phone, profile.location].filter(Boolean);
-  const contact = document.createElement("p");
-  contact.className = "resume-contact";
-  contact.textContent = contactParts.join(" | ");
+      if (item.href) {
+        const link = createElement("a", "", item.value);
+        link.href = item.href;
 
-  header.append(name, headline, contact);
+        if (item.href.startsWith("http")) {
+          link.target = "_blank";
+          link.rel = "noreferrer";
+        }
+
+        contact.appendChild(link);
+      } else {
+        contact.appendChild(createElement("span", "", item.value));
+      }
+    });
+
+    header.appendChild(contact);
+  }
+
   container.appendChild(header);
 }
 
-function formatResumeLine(sectionKey, item) {
-  if (sectionKey === "summary") {
-    return item.text || "";
+function appendHighlights(entry, highlights) {
+  if (!Array.isArray(highlights) || highlights.length === 0) {
+    return;
   }
 
-  if (sectionKey === "education") {
-    return `${item.degree || ""} - ${item.institution || ""} (${item.years || ""})`.trim();
-  }
+  const list = createElement("ul", "resume-bullets");
+  highlights.filter(Boolean).forEach((highlight) => {
+    list.appendChild(createElement("li", "", highlight));
+  });
 
-  if (sectionKey === "experience") {
-    return `${item.role || ""} - ${item.organization || ""} (${item.years || ""})`.trim();
+  if (list.children.length > 0) {
+    entry.appendChild(list);
   }
-
-  if (sectionKey === "projects") {
-    const details = [item.name, item.tech, item.year].filter(Boolean).join(" | ");
-    return details;
-  }
-
-  if (sectionKey === "skills") {
-    return [item.name, item.level].filter(Boolean).join(" - ");
-  }
-
-  if (sectionKey === "certifications") {
-    return [item.name, item.issuer, item.year].filter(Boolean).join(" - ");
-  }
-
-  if (sectionKey === "languages") {
-    return [item.name, item.level].filter(Boolean).join(" - ");
-  }
-
-  if (sectionKey === "volunteer") {
-    return [item.role, item.organization, item.years].filter(Boolean).join(" - ");
-  }
-
-  if (sectionKey === "awards") {
-    return [item.title, item.issuer, item.year].filter(Boolean).join(" - ");
-  }
-
-  if (sectionKey === "references") {
-    return [item.name, item.relation, item.contact].filter(Boolean).join(" - ");
-  }
-
-  return "";
 }
+
+function appendDetailedEntries(section, items, sectionKey) {
+  const presenter = ENTRY_PRESENTERS[sectionKey];
+  if (!presenter) {
+    return;
+  }
+
+  items.forEach((item) => {
+    const view = presenter(item);
+    if (!view.title) {
+      return;
+    }
+
+    const entry = createElement("article", "resume-entry");
+    const heading = createElement("div", "resume-entry-heading");
+    heading.appendChild(createElement("h4", "resume-entry-title", view.title));
+
+    if (view.date) {
+      heading.appendChild(createElement("span", "resume-entry-date", view.date));
+    }
+
+    entry.appendChild(heading);
+
+    if (view.subtitle || view.meta) {
+      const subline = createElement("div", "resume-entry-subline");
+
+      if (view.subtitle) {
+        subline.appendChild(createElement("span", "resume-entry-subtitle", view.subtitle));
+      }
+
+      if (view.meta) {
+        subline.appendChild(createElement("span", "resume-entry-meta", view.meta));
+      }
+
+      entry.appendChild(subline);
+    }
+
+    appendHighlights(entry, view.highlights);
+    section.appendChild(entry);
+  });
+}
+
+function appendSummaryItems(section, items) {
+  items.forEach((item) => {
+    if (item.text) {
+      section.appendChild(createElement("p", "resume-summary", item.text));
+    }
+  });
+}
+
+function appendSkillItems(section, items) {
+  items.forEach((item) => {
+    const values = Array.isArray(item.values) ? item.values.filter(Boolean).join(", ") : item.value;
+    if (!item.name || !values) {
+      return;
+    }
+
+    const row = createElement("p", "resume-skill-row");
+    row.appendChild(createElement("strong", "", `${item.name}: `));
+    row.appendChild(document.createTextNode(values));
+    section.appendChild(row);
+  });
+}
+
+function appendInlineItems(section, labels) {
+  const list = createElement("p", "resume-inline-list");
+
+  labels.filter(Boolean).forEach((label, index) => {
+    if (index > 0) {
+      list.appendChild(createElement("span", "resume-inline-separator", "|"));
+    }
+
+    list.appendChild(createElement("span", "", label));
+  });
+
+  if (list.children.length > 0) {
+    section.appendChild(list);
+  }
+}
+
+function appendLanguageItems(section, items) {
+  appendInlineItems(
+    section,
+    items.map((item) => [item.name, item.level].filter(Boolean).join(": ")),
+  );
+}
+
+function appendHobbyItems(section, items) {
+  appendInlineItems(
+    section,
+    items.map((item) => item.name),
+  );
+}
+
+const SECTION_RENDERERS = {
+  summary: appendSummaryItems,
+  skills: appendSkillItems,
+  languages: appendLanguageItems,
+  hobbies: appendHobbyItems,
+};
 
 function appendResumeSection(container, sectionKey, sectionData) {
   if (!isCategoryEnabled(sectionData)) {
@@ -282,29 +390,17 @@ function appendResumeSection(container, sectionKey, sectionData) {
     return;
   }
 
-  const section = document.createElement("section");
-  section.className = "resume-section";
+  const section = createElement("section", "resume-section");
+  section.appendChild(createElement("h3", "", toSectionLabel(sectionKey)));
 
-  const title = document.createElement("h3");
-  title.textContent = toSectionLabel(sectionKey);
-  section.appendChild(title);
+  const renderer = SECTION_RENDERERS[sectionKey];
+  if (renderer) {
+    renderer(section, enabledItems);
+  } else {
+    appendDetailedEntries(section, enabledItems, sectionKey);
+  }
 
-  const list = document.createElement("ul");
-  list.className = "resume-list";
-
-  enabledItems.forEach((item) => {
-    const line = formatResumeLine(sectionKey, item);
-    if (!line) {
-      return;
-    }
-
-    const li = document.createElement("li");
-    li.textContent = line;
-    list.appendChild(li);
-  });
-
-  if (list.children.length > 0) {
-    section.appendChild(list);
+  if (section.children.length > 1) {
     container.appendChild(section);
   }
 }
@@ -317,27 +413,23 @@ function renderCvResume() {
 
   output.innerHTML = "";
 
-  const resume = document.createElement("article");
-  resume.className = "cv-resume-card";
-
+  const resume = createElement("article", "cv-resume-card");
   appendProfileHeader(resume, cvData.profile);
 
-  Object.keys(cvData)
-    .filter((key) => key !== "profile")
-    .forEach((sectionKey) => {
+  RESUME_SECTION_ORDER.forEach((sectionKey) => {
+    if (cvData[sectionKey]) {
       appendResumeSection(resume, sectionKey, cvData[sectionKey]);
-    });
+    }
+  });
 
   if (resume.children.length === 0) {
-    const empty = document.createElement("p");
-    empty.textContent = "There is no active resume content to show.";
-    resume.appendChild(empty);
+    resume.appendChild(createElement("p", "resume-empty", "There is no active resume content to show."));
   }
 
   output.appendChild(resume);
 }
 
-async function onReloadCvClick() {
+async function initializeCv() {
   if (isCvBusy) {
     return;
   }
@@ -346,8 +438,7 @@ async function onReloadCvClick() {
   showCvFeedback("Loading cv.json...");
 
   try {
-    const loaded = await loadCvData();
-    cvData = cloneJson(loaded);
+    cvData = cloneJson(await loadCvData());
     renderCvControls();
     renderCvResume();
     showCvFeedback("");
@@ -357,6 +448,16 @@ async function onReloadCvClick() {
   } finally {
     setCvBusyState(false);
   }
+}
+
+function createPdfStage(resumeNode) {
+  const stage = createElement("div", "resume-pdf-stage");
+  const clone = resumeNode.cloneNode(true);
+  clone.classList.add("is-pdf-export");
+  stage.appendChild(clone);
+  document.body.appendChild(stage);
+
+  return { stage, clone };
 }
 
 async function onDownloadPdfClick() {
@@ -377,18 +478,29 @@ async function onDownloadPdfClick() {
 
   setCvBusyState(true);
   showCvFeedback("Generating PDF...");
+  const { stage, clone } = createPdfStage(resumeNode);
 
   try {
     await window
       .html2pdf()
       .set({
-        margin: 10,
-        filename: "resume.pdf",
+        margin: 0,
+        filename: "Armando-Rodriguez-Resume.pdf",
         image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff",
+          scrollX: 0,
+          scrollY: 0,
+        },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        pagebreak: {
+          mode: ["css", "legacy"],
+          avoid: [".resume-entry", ".resume-skill-row"],
+        },
       })
-      .from(resumeNode)
+      .from(clone)
       .save();
 
     showCvFeedback("PDF generated successfully.");
@@ -396,27 +508,20 @@ async function onDownloadPdfClick() {
     const message = error instanceof Error ? error.message : "Could not generate the PDF.";
     showCvFeedback(`Error: ${message}`, true);
   } finally {
+    stage.remove();
     setCvBusyState(false);
   }
 }
 
 function initCvModule() {
-  const reloadButton = getElement("cv-reload-btn");
   const downloadButton = getElement("cv-download-btn");
 
-  if (!reloadButton || !downloadButton) {
+  if (!downloadButton) {
     return;
   }
 
-  reloadButton.addEventListener("click", () => {
-    onReloadCvClick();
-  });
-
-  downloadButton.addEventListener("click", () => {
-    onDownloadPdfClick();
-  });
-
-  onReloadCvClick();
+  downloadButton.addEventListener("click", onDownloadPdfClick);
+  initializeCv();
 }
 
 initCvModule();

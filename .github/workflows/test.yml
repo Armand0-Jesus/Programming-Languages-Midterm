@@ -50,7 +50,10 @@ jobs:
                               missing.append(value)
 
           SrcParser().feed((root / "index.html").read_text(encoding="utf-8"))
-          json.loads((root / "data" / "cv.json").read_text(encoding="utf-8"))
+          cv = json.loads((root / "modules" / "cv_generator" / "cv.json").read_text(encoding="utf-8"))
+
+          if len(cv) < 10:
+              raise SystemExit("cv.json must define at least 10 categories")
 
           if missing:
               raise SystemExit("Missing local assets: " + ", ".join(missing))
