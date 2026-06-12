@@ -1,0 +1,108 @@
+name: Project checks
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+
+jobs:
+  verify:
+    name: Verify app builds
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Check local asset paths
+        run: |
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import json
+
+          root = Path.cwd()
+          missing = []
+
+          class SrcParser(HTMLParser):
+              def handle_starttag(self, tag, attrs):
+                  for key, value in attrs:
+                      if key == "src" and value and not value.startswith(("http://", "https://")):
+                          if not (root / value).exists():
+                              missing.append(value)
+
+          SrcParser().feed((root / "index.html").read_text(encoding="utf-8"))
+          json.loads((root / "data" / "cv.json").read_text(encoding="utf-8"))
+
+          if missing:
+              raise SystemExit("Missing local assets: " + ", ".join(missing))
+          PY
+
+      - name: Check Python modules
+        run: |
+          python -m py_compile \
+            modules/gpa_calculator/gpa.py \
+            modules/metric_converter/converter.py
+          python - <<'PY'
+          import importlib.util
+          from pathlib import Path
+
+          def load_module(name, path):
+              spec = importlib.util.spec_from_file_location(name, Path(path))
+              module = importlib.util.module_from_spec(spec)
+              spec.loader.exec_module(module)
+              return module
+
+          gpa = load_module("gpa", "modules/gpa_calculator/gpa.py")
+          converter = load_module("converter", "modules/metric_converter/converter.py")
+
+          assert gpa.parse_grade_points("A", "Grade") == 4.0
+          assert gpa.parse_credits("3", "Credits") == 3
+          assert converter.convert_selected_value("celsius_to_fahrenheit", 0) == "0.00 C is 32.00 F."
+          assert converter.convert_selected_value("meters_to_feet_inches", 1) == "1.00 meters is 3.03 feet."
+          PY
+
+      - name: Check JavaScript syntax
+        run: |
+          for file in \
+            assets/js/app.js \
+            assets/js/java_modules.js \
+            assets/js/elm_budget_module.js \
+            assets/generated/elm_budget.js \
+            modules/academic_recommender/recommender.js \
+            modules/cv_generator/generator.js
+          do
+            node --check "$file"
+          done
+
+      - name: Check Elm build
+        run: |
+          npm install --global elm@0.19.1-6
+          cd modules/budget_tracker
+          elm make src/Main.elm --output=/tmp/elm_budget_check.js
+
+      - name: Check task manager Java module
+        working-directory: modules/task_manager
+        run: mvn -q -DskipTests compile
+
+      - name: Check priority calculator Java module
+        working-directory: modules/priority_calculator
+        run: mvn -q -DskipTests compile
