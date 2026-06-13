@@ -1,3 +1,3 @@
-# Smart Simple Manager
+# Paradigm Portal
 
 
