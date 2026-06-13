@@ -28,18 +28,18 @@ The main features include:
 
 These are the 7 programs and what type of paradigm was used for all of them:
 
-GPA Calculator (Python) - Imperative
-Metric Converter (Python) - Imperative
-Task Manager (Java) - Object-Oriented
-Priority Calculator (Java) - Object-Oriented 
-Academic Recommender (Prolog) - Logical 
-Budget Tracker (Elm) - Functional 
-CV Generator (JavaScript) - Imperative 
+- GPA Calculator (Python) - Imperative
+- Metric Converter (Python) - Imperative
+- Task Manager (Java) - Object-Oriented
+- Priority Calculator (Java) - Object-Oriented 
+- Academic Recommender (Prolog) - Logical 
+- Budget Tracker (Elm) - Functional 
+- CV Generator (JavaScript) - Imperative 
 
 ### Built With
 
-![HTML](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![HTML](https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-20232A?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
@@ -66,7 +66,7 @@ Open `http://localhost:8000` in a browser of your choice
 
 There are also avaible extensions that help for viewing webpages like Live Server. 
 
-FINAL NOTE: Elm, Java 17 and Maven should be installed if you will work with modifying and rebuilding their respective source modules.
+**FINAL NOTE**: Elm, Java 17 and Maven should be installed if you will work with modifying and rebuilding their respective source modules.
 
 ## Usage
 
@@ -101,4 +101,3 @@ Use the navigation buttons at the top of the page to move between seven programs
 |-- index.html                  # Main page of application
 `-- README.md
 ```
-
